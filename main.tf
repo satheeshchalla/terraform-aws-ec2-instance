@@ -7,6 +7,21 @@ resource "aws_security_group" "security_group" {
   description = "set of rules allowed inbound and outbound"
   name_prefix = "${var.name_prefix}-ec2-instance-sg"
   vpc_id      = var.vpc_id
+  dynamic "ingress" {
+    for_each = var.sg_ports
+    content {
+      from_port   = ingress.value
+      to_port     = ingress.value
+      protocol    = "tcp"
+      cidr_blocks = var.source_ip_addrs
+    }
+  }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = -1
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 
   tags = {
     Name = "${var.name_prefix}-ec2-instance-sg"
@@ -16,25 +31,6 @@ resource "aws_security_group" "security_group" {
   }
 }
 
-resource "aws_security_group_rule" "allow_ssh" {
-  count             = length(var.security_group_ids) == 0 ? 1 : 0
-  description       = "allow ssh to this instance"
-  type              = "ingress"
-  from_port         = 22
-  to_port           = 22
-  protocol          = "tcp"
-  cidr_blocks       = var.source_ip_addrs
-  security_group_id = aws_security_group.security_group[0].id
-}
-
-resource "aws_security_group_rule" "allow_everything" {
-  type              = "egress"
-  from_port         = 0
-  to_port           = 0
-  protocol          = "-1"
-  cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = aws_security_group.security_group[0].id
-}
 
 locals {
   sg_ids = length(var.security_group_ids) == 0 ? [aws_security_group.security_group[0].id] : var.security_group_ids
