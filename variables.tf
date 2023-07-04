@@ -94,3 +94,15 @@ variable "enable_system_patches" {
   description = "(optional) Allow SSM to apply patches to this instance. "
   default     = false
 }
+
+variable "region" {
+  type        = string
+  description = "(optional) default region is ap-south-1"
+  default     = "ap-south-1"
+}
+
+variable "sg_ports" {
+  type        = list(number)
+  description = "allow ports to this instance"
+  default     = [22, 80]
+}
