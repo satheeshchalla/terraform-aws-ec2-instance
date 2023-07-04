@@ -94,3 +94,9 @@ variable "enable_system_patches" {
   description = "(optional) Allow SSM to apply patches to this instance. "
   default     = false
 }
+
+variable "region" {
+  type        = string
+  description = "(optional) default region is ap-south-1"
+  default     = "ap-south-1"
+}

@@ -27,14 +27,14 @@ resource "aws_security_group_rule" "allow_ssh" {
   security_group_id = aws_security_group.security_group[0].id
 }
 
-# resource "aws_security_group_rule" "allow_everything" {
-#   type              = "egress"
-#   from_port         = 0
-#   to_port           = 0
-#   protocol          = "-1"
-#   cidr_blocks       = ["0.0.0.0/0"]
-#   security_group_id = aws_security_group.security_group.id
-# }
+resource "aws_security_group_rule" "allow_everything" {
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.security_group[0].id
+}
 
 locals {
   sg_ids = length(var.security_group_ids) == 0 ? [aws_security_group.security_group[0].id] : var.security_group_ids
@@ -51,12 +51,12 @@ resource "aws_network_interface" "eni" {
 
 
 resource "aws_instance" "ec2_instance" {
-  ami           = var.image_id
-  subnet_id     = var.subnet_id
+  ami = var.image_id
+  # subnet_id     = var.subnet_id (shouldn't have subnet_id when you use network_interface. The reason is that the instance will be create in the subnet where the network interface is.)
   instance_type = var.instance_type
 
-  key_name                             = var.key_name
-  iam_instance_profile                 = var.iam_instance_profile
+  key_name                             = aws_key_pair.key.key_name
+  iam_instance_profile                 = aws_iam_instance_profile.ec2_instance_profile[0].id
   user_data                            = var.user_data
   user_data_base64                     = var.user_data_base64
   instance_initiated_shutdown_behavior = "stop"
@@ -83,4 +83,10 @@ resource "aws_instance" "ec2_instance" {
     AutoSSMPatches = var.enable_system_patches
   }
 
+}
+
+resource "aws_key_pair" "key" {
+  key_name = "my-key"
+  # add your public key in project root directory
+  public_key = file("mention key name here")
 }

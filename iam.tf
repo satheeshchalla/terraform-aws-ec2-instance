@@ -18,7 +18,7 @@ resource "aws_iam_role" "ec2_role" {
 }
 
 resource "aws_iam_instance_profile" "ec2_instance_profile" {
-  count = var.iam_instance_profile == null ? 1 : 0
+  count = var.iam_instance_profile == "" ? 1 : 0
   name  = "${var.name_prefix}-ec2-instance-profile"
   role  = aws_iam_role.ec2_role[0].name
 }
@@ -29,7 +29,7 @@ locals {
 }
 
 resource "aws_iam_role_policy_attachment" "attach_base_ec2_policies" {
-  for_each   = toset([for p in local.base_ec2_policies : p if var.iam_instance_profile == null])
+  for_each   = toset([for p in local.base_ec2_policies : p if var.iam_instance_profile == ""])
   policy_arn = each.key
   role       = aws_iam_role.ec2_role[0].name
 
