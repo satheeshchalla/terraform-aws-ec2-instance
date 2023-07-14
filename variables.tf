@@ -109,8 +109,8 @@ variable "sg_ports" {
 
 variable "instance_count" {
   type        = number
-  description = "num of ec2 instances required"
-  default     = ""
+  description = "default ec2 instances is 1"
+  default     = "1"
 }
 
 variable "public_key" {
