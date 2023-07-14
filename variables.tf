@@ -65,7 +65,7 @@ variable "security_group_ids" {
   description = "(optional) list of security group ids to be attached to this instance."
   default     = []
 }
-variable "source_ip_addrs" {
+variable "sg_source_cidr" {
   type        = list(any)
   description = "(optional) List of Source IP addresses to allow SSH to this instance."
   default     = []
@@ -104,5 +104,17 @@ variable "region" {
 variable "sg_ports" {
   type        = list(number)
   description = "allow ports to this instance"
-  default     = [22, 80]
+  default     = []
+}
+
+variable "instance_count" {
+  type        = number
+  description = "num of ec2 instances required"
+  default     = ""
+}
+
+variable "public_key" {
+  type        = string
+  description = "public key for ec2 instance"
+  default     = ""
 }
