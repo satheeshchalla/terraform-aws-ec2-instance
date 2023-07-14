@@ -65,7 +65,7 @@ variable "security_group_ids" {
   description = "(optional) list of security group ids to be attached to this instance."
   default     = []
 }
-variable "source_ip_addrs" {
+variable "sg_source_cidr" {
   type        = list(any)
   description = "(optional) List of Source IP addresses to allow SSH to this instance."
   default     = []
@@ -93,4 +93,28 @@ variable "enable_system_patches" {
   type        = bool
   description = "(optional) Allow SSM to apply patches to this instance. "
   default     = false
+}
+
+variable "region" {
+  type        = string
+  description = "(optional) default region is ap-south-1"
+  default     = "ap-south-1"
+}
+
+variable "sg_ports" {
+  type        = list(number)
+  description = "allow ports to this instance"
+  default     = []
+}
+
+variable "instance_count" {
+  type        = number
+  description = "default ec2 instances is 1"
+  default     = "1"
+}
+
+variable "public_key" {
+  type        = string
+  description = "public key for ec2 instance"
+  default     = ""
 }
